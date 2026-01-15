@@ -21,14 +21,13 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'apps.common',
-]
-
-CORS_ALLOW_ALL_ORIGINS = True
     'apps.accounting',
     'apps.inventory',
     'apps.hr',
     'apps.reporting',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
