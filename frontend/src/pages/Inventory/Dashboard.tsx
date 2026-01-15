@@ -45,19 +45,22 @@ export default function InventoryDashboard() {
             </div>
 
             {/* Corporate Stat Cards */}
-            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+            {/* Corporate Stat Cards - Compact */}
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-4 mb-8">
                 {[
-                    { name: 'Total Stock Valuation', stat: '$124,592', change: '+12%', changeType: 'increase' },
-                    { name: 'Critical Stock Items', stat: '8', change: '-2', changeType: 'decrease' },
-                    { name: 'Pending Transfers', stat: '3', change: '0', changeType: 'neutral' },
-                    { name: 'Active Warehouses', stat: '4', change: '+1', changeType: 'increase' },
+                    { name: 'Stock Value', stat: '$124,592', change: '+12%', changeType: 'increase' },
+                    { name: 'Critical Items', stat: '8', change: '-2', changeType: 'decrease' },
+                    { name: 'Pending', stat: '3', change: '0', changeType: 'neutral' },
+                    { name: 'Warehouses', stat: '4', change: '+1', changeType: 'increase' },
                 ].map((item) => (
-                    <div key={item.name} className="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6 border border-gray-200">
-                        <dt className="truncate text-sm font-medium text-gray-500">{item.name}</dt>
-                        <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{item.stat}</dd>
-                        <dd className={`mt-2 text-sm font-medium ${item.changeType === 'increase' ? 'text-green-600' : item.changeType === 'decrease' ? 'text-red-600' : 'text-gray-500'}`}>
-                            {item.change} since last month
-                        </dd>
+                    <div key={item.name} className="overflow-hidden rounded-lg bg-white px-4 py-3 shadow border border-gray-200 flex items-center justify-between">
+                        <div>
+                            <dt className="truncate text-xs font-medium text-gray-500 uppercase tracking-wide">{item.name}</dt>
+                            <dd className="mt-1 text-xl font-bold tracking-tight text-gray-900">{item.stat}</dd>
+                        </div>
+                        <span className={`text-sm font-semibold ${item.changeType === 'increase' ? 'text-green-600' : item.changeType === 'decrease' ? 'text-red-600' : 'text-gray-500'}`}>
+                            {item.change}
+                        </span>
                     </div>
                 ))}
             </div>
