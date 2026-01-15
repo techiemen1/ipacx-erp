@@ -38,10 +38,15 @@ class AuthViewSet(viewsets.ViewSet):
                 for m in memberships
             ]
             
+            # Get or create token
+            from rest_framework.authtoken.models import Token
+            token, _ = Token.objects.get_or_create(user=user)
+
             user_data = UserInfoSerializer(user).data
             # Return orgs along with user info
             return Response({
                 **user_data,
+                "token": token.key,
                 "organizations": orgs
             })
         

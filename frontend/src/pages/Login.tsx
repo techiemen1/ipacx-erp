@@ -22,6 +22,7 @@ export default function Login() {
     const [step, setStep] = useState<'credentials' | 'org_select'>('credentials');
     const [organizations, setOrganizations] = useState<Organization[]>([]);
     const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
+    const [token, setToken] = useState('');
 
     const handleCredentialsSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,12 +35,13 @@ export default function Login() {
                 setError('No organizations found for this user. Please contact Admin.');
             } else if (orgs.length === 1) {
                 // Auto login if only one
-                login(res.data.username, orgs[0].id);
+                login(res.data.username, orgs[0].id, res.data.token);
                 navigate('/');
             } else {
                 // Show dropdown
                 setOrganizations(orgs);
                 setSelectedOrg(orgs[0]);
+                setToken(res.data.token);
                 setStep('org_select');
             }
         } catch (err: any) {
@@ -50,8 +52,8 @@ export default function Login() {
 
     const handleOrgSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (selectedOrg) {
-            login(username, selectedOrg.id);
+        if (selectedOrg && token) {
+            login(username, selectedOrg.id, token);
             navigate('/');
         }
     };
