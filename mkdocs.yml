@@ -1,0 +1,17 @@
+site_name: IPACX ERP
+site_description: Open Source Enterprise Resource Planning
+repo_url: https://github.com/techiemen1/ipacx-erp
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: teal
+
+nav:
+  - Home: index.md
+  - Architecture:
+    - Diagrams: docs/architecture/diagrams.md
+  - Modules:
+    - Specifications: docs/modules/specs.md
+  - Operations:
+    - Deployment: docs/ops/deployment.md
