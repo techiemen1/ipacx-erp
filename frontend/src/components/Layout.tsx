@@ -10,15 +10,19 @@ import {
     BuildingOfficeIcon,
     MagnifyingGlassIcon,
     BellIcon,
+    UserGroupIcon,
+    UsersIcon,
+    Cog6ToothIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const navigation = [
-    { name: 'Dashboard', href: '/', icon: HomeIcon },
-    { name: 'Accounting', href: '/accounting', icon: CalculatorIcon },
     { name: 'Inventory', href: '/inventory', icon: ArchiveBoxIcon },
+    { name: 'Accounting', href: '/accounting', icon: CalculatorIcon },
+    { name: 'CRM', href: '/crm', icon: UserGroupIcon },
+    { name: 'HR', href: '/hr', icon: UsersIcon },
 ]
 
 function classNames(...classes: string[]) {
@@ -102,10 +106,10 @@ export default function Layout() {
                                                     </ul>
                                                 </li>
                                                 <li className="mt-auto">
-                                                    <a href="#" className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
-                                                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-[0.625rem] font-medium text-slate-400 group-hover:text-white">S</span>
+                                                    <Link to="/settings" className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+                                                        <Cog6ToothIcon className="h-6 w-6 shrink-0" aria-hidden="true" />
                                                         Settings
-                                                    </a>
+                                                    </Link>
                                                 </li>
                                             </ul>
                                         </nav>

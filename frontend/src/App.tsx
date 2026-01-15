@@ -2,6 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Layout from './components/Layout';
 import InventoryDashboard from './pages/Inventory/Dashboard';
 import AccountingDashboard from './pages/Accounting/Dashboard';
+import CRMDashboard from './pages/CRM/Dashboard';
+import HRDashboard from './pages/HR/Dashboard';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -43,6 +45,10 @@ function App() {
                         <Route index element={<MainDashboard />} />
                         <Route path="accounting" element={<AccountingDashboard />} />
                         <Route path="inventory" element={<InventoryDashboard />} />
+                        <Route path="crm" element={<CRMDashboard />} />
+                        <Route path="hr" element={<HRDashboard />} />
+                        {/* Settings can share a placeholder for now */}
+                        <Route path="settings" element={<div className="p-8"><h1>Settings Module</h1></div>} />
                     </Route>
                 </Routes>
             </Router>
