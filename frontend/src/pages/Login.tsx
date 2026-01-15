@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '../api/auth';
-import { CheckIcon } from '@heroicons/react/20/solid';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
+import { Listbox, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 
 interface Organization {
-    id: string; // This is the slug
+    id: string;
     name: string;
 }
 
@@ -34,7 +36,6 @@ export default function Login() {
                 return;
             }
 
-            // ALWAYS show organization selection for professional feel & clarity
             setOrganizations(orgs);
             if (orgs.length > 0) setSelectedOrg(orgs[0]);
             setToken(res.data.token);
@@ -55,146 +56,169 @@ export default function Login() {
     };
 
     return (
-        <div className="relative min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 overflow-hidden bg-slate-900">
-            {/* Abstract Mesh Gradient Background */}
-            <div className="absolute inset-0 w-full h-full">
-                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-700/30 blur-[100px] animate-pulse" />
-                <div className="absolute top-[20%] right-[-5%] w-[30%] h-[30%] rounded-full bg-indigo-600/20 blur-[100px]" />
-                <div className="absolute bottom-[-10%] left-[20%] w-[50%] h-[50%] rounded-full bg-blue-900/20 blur-[100px]" />
-            </div>
-
-            <div className="relative sm:mx-auto sm:w-full sm:max-w-md">
-                <div className="text-center mb-8">
-                    <h2 className="text-4xl font-extrabold text-white tracking-tight">IPACX ERP</h2>
-                    <p className="mt-2 text-sm text-slate-400 uppercase tracking-widest font-semibold">
-                        Enterprise Access
+        <div className="flex min-h-screen bg-white">
+            {/* Left Side - Corporate Navy */}
+            <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden">
+                {/* Subtle Corporate Pattern */}
+                <svg className="absolute inset-0 h-full w-full stroke-white/5 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" aria-hidden="true">
+                    <defs>
+                        <pattern id="983e3e43-13e7-4ea9-874f-9e8c37d6cb41" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+                            <path d="M.5 200V.5H200" fill="none" />
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" strokeWidth="0" fill="url(#983e3e43-13e7-4ea9-874f-9e8c37d6cb41)" />
+                </svg>
+                <div className="relative z-10 flex flex-col justify-center px-12 text-white">
+                    <div className="flex items-center space-x-3 mb-8">
+                        <div className="h-10 w-10 bg-indigo-500 rounded flex items-center justify-center">
+                            <span className="font-bold text-xl">I</span>
+                        </div>
+                        <span className="text-2xl font-bold tracking-tight">IPACX ERP</span>
+                    </div>
+                    <h1 className="text-4xl font-bold mb-4 tracking-tight">Enterprise Resource Planning</h1>
+                    <p className="text-lg text-slate-300 max-w-md leading-relaxed">
+                        Manage your accounting, inventory, and human resources with distinct corporate precision.
                     </p>
                 </div>
+            </div>
 
-                <div className="bg-white/10 backdrop-blur-xl border border-white/10 py-8 px-4 shadow-2xl sm:rounded-xl sm:px-10 relative overflow-hidden">
-                    {/* Glass Shine Effect */}
-                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-50" />
-
-                    <div className="sm:mx-auto sm:w-full sm:max-w-md mb-6">
-                        <h3 className="text-xl font-semibold text-white/90">
-                            {step === 'credentials' ? 'Sign in to your account' : 'Select Workspace'}
-                        </h3>
-                        {step === 'org_select' && (
-                            <p className="mt-1 text-sm text-slate-400">Choose your organization environment.</p>
-                        )}
+            {/* Right Side - Clean Form */}
+            <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white">
+                <div className="mx-auto w-full max-w-sm lg:w-96">
+                    <div className="mb-8">
+                        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
+                            {step === 'credentials' ? 'Sign in to access' : 'Select Organization'}
+                        </h2>
+                        <p className="mt-2 text-sm text-slate-600">
+                            {step === 'credentials' ? 'Secure usage is monitored.' : 'Choose target workspace.'}
+                        </p>
                     </div>
 
                     {error && (
-                        <div className="mb-6 rounded-lg bg-red-500/10 border border-red-500/20 p-4">
+                        <div className="mb-6 rounded-md bg-red-50 p-4 border-l-4 border-red-500">
                             <div className="flex">
                                 <div className="ml-3">
-                                    <h3 className="text-sm font-medium text-red-400">{error}</h3>
+                                    <h3 className="text-sm font-medium text-red-800">{error}</h3>
                                 </div>
                             </div>
                         </div>
                     )}
 
-                    {step === 'credentials' ? (
-                        <form className="space-y-6" onSubmit={handleCredentialsSubmit}>
-                            <div>
-                                <label htmlFor="username" className="block text-sm font-medium text-slate-300">
-                                    Username
-                                </label>
-                                <div className="mt-1">
-                                    <input
-                                        id="username"
-                                        name="username"
-                                        type="text"
-                                        required
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        className="appearance-none block w-full px-3 py-2.5 border border-white/10 rounded-lg bg-slate-900/50 placeholder-slate-500 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent sm:text-sm transition-all duration-200"
-                                        placeholder="Enter your username"
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-slate-300">
-                                    Password
-                                </label>
-                                <div className="mt-1">
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        required
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="appearance-none block w-full px-3 py-2.5 border border-white/10 rounded-lg bg-slate-900/50 placeholder-slate-500 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent sm:text-sm transition-all duration-200"
-                                        placeholder="••••••••"
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-lg text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-slate-900 transition-all duration-200 transform hover:scale-[1.02]"
-                                >
-                                    Sign in
-                                </button>
-                            </div>
-                        </form>
-                    ) : (
-                        <form className="space-y-6" onSubmit={handleOrgSubmit}>
-                            <div className="space-y-3">
-                                {organizations.map((org) => (
-                                    <div
-                                        key={org.id}
-                                        onClick={() => setSelectedOrg(org)}
-                                        className={`group relative flex items-center p-4 cursor-pointer rounded-lg border transition-all duration-200 ${selectedOrg?.id === org.id
-                                                ? 'bg-indigo-600/20 border-indigo-500/50 ring-1 ring-indigo-500/50'
-                                                : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
-                                            }`}
-                                    >
-                                        <div className="h-10 w-10 rounded-md bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
-                                            <span className="text-white font-bold text-lg">{org.name.charAt(0)}</span>
-                                        </div>
-                                        <div className="ml-4 flex-1">
-                                            <p className={`text-sm font-medium ${selectedOrg?.id === org.id ? 'text-white' : 'text-slate-200'}`}>
-                                                {org.name}
-                                            </p>
-                                            <p className="text-xs text-slate-500 uppercase tracking-wider">{org.id}</p>
-                                        </div>
-                                        {selectedOrg?.id === org.id && (
-                                            <div className="h-5 w-5 bg-indigo-500 rounded-full flex items-center justify-center">
-                                                <CheckIcon className="h-3 w-3 text-white" />
-                                            </div>
-                                        )}
+                    <div className="mt-6">
+                        {step === 'credentials' ? (
+                            <form onSubmit={handleCredentialsSubmit} className="space-y-6">
+                                <div>
+                                    <label htmlFor="username" className="block text-sm font-semibold leading-6 text-slate-900">
+                                        Username
+                                    </label>
+                                    <div className="mt-2">
+                                        <input
+                                            id="username"
+                                            name="username"
+                                            type="text"
+                                            required
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
+                                            className="block w-full rounded-md border-0 py-2 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        />
                                     </div>
-                                ))}
-                            </div>
+                                </div>
 
-                            <div>
-                                <button
-                                    type="submit"
-                                    className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-lg text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-slate-900 transition-all duration-200 transform hover:scale-[1.02]"
-                                >
-                                    Enter Workspace
-                                </button>
-                            </div>
-                            <div className="text-center">
-                                <button
-                                    type="button"
-                                    onClick={() => setStep('credentials')}
-                                    className="text-sm text-slate-400 hover:text-white transition-colors"
-                                >
-                                    ← Back to Login
-                                </button>
-                            </div>
-                        </form>
-                    )}
+                                <div>
+                                    <label htmlFor="password" className="block text-sm font-semibold leading-6 text-slate-900">
+                                        Password
+                                    </label>
+                                    <div className="mt-2">
+                                        <input
+                                            id="password"
+                                            name="password"
+                                            type="password"
+                                            required
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            className="block w-full rounded-md border-0 py-2 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button
+                                        type="submit"
+                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    >
+                                        Authenticate
+                                    </button>
+                                </div>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleOrgSubmit} className="space-y-6">
+                                <div className="relative">
+                                    <label className="block text-sm font-semibold leading-6 text-slate-900 mb-2">
+                                        Organization Instance
+                                    </label>
+                                    <Listbox value={selectedOrg} onChange={setSelectedOrg}>
+                                        <div className="relative mt-1">
+                                            <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-3 pl-3 pr-10 text-left shadow-sm ring-1 ring-inset ring-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                <span className="block truncate">{selectedOrg?.name}</span>
+                                                <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                                    <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                </span>
+                                            </Listbox.Button>
+                                            <Transition
+                                                as={Fragment}
+                                                leave="transition ease-in duration-100"
+                                                leaveFrom="opacity-100"
+                                                leaveTo="opacity-0"
+                                            >
+                                                <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                                    {organizations.map((org) => (
+                                                        <Listbox.Option
+                                                            key={org.id}
+                                                            className={({ active }) =>
+                                                                `relative cursor-default select-none py-2 pl-3 pr-9 ${active ? 'bg-indigo-600 text-white' : 'text-gray-900'
+                                                                }`
+                                                            }
+                                                            value={org}
+                                                        >
+                                                            {({ selected, active }) => (
+                                                                <>
+                                                                    <span className={`block truncate ${selected ? 'font-semibold' : 'font-normal'}`}>
+                                                                        {org.name}
+                                                                    </span>
+                                                                    {selected ? (
+                                                                        <span className={`absolute inset-y-0 right-0 flex items-center pr-4 ${active ? 'text-white' : 'text-indigo-600'}`}>
+                                                                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                                                                        </span>
+                                                                    ) : null}
+                                                                </>
+                                                            )}
+                                                        </Listbox.Option>
+                                                    ))}
+                                                </Listbox.Options>
+                                            </Transition>
+                                        </div>
+                                    </Listbox>
+                                </div>
+
+                                <div>
+                                    <button
+                                        type="submit"
+                                        className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    >
+                                        Access Workspace
+                                    </button>
+                                </div>
+                                <div className="text-center">
+                                    <button type="button" onClick={() => setStep('credentials')} className="text-sm text-slate-500 hover:text-slate-900">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+                    </div>
                 </div>
-                <div className="mt-8 text-center">
-                    <p className="text-xs text-slate-600">
-                        © 2026 IPACX Systems. All rights reserved.
-                    </p>
+                <div className="mt-8 text-center text-xs text-slate-500 font-medium">
+                    © 2026 TECHIEMEN, INDIA. All rights reserved.
                 </div>
             </div>
         </div>
