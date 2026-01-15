@@ -20,7 +20,10 @@ export default function InventoryDashboard() {
     return (
         <div>
             <div className="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between">
-                <h3 className="text-base font-semibold leading-6 text-gray-900">Inventory Dashboard</h3>
+                <div>
+                    <h3 className="text-2xl font-bold leading-6 text-gray-900">Inventory Dashboard</h3>
+                    <p className="mt-2 text-sm text-gray-500">Real-time overview of your stock and movements.</p>
+                </div>
                 <div className="mt-3 flex sm:ml-4 sm:mt-0">
                     <button
                         onClick={fetchData}
@@ -41,10 +44,37 @@ export default function InventoryDashboard() {
                 </div>
             </div>
 
+            {/* Key Metrics - Dummy Data for Visuals */}
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+                {[
+                    { name: 'Total Stock Value', stat: '$124,592', change: '+12%', changeType: 'increase' },
+                    { name: 'Low Stock Items', stat: '8', change: '-2', changeType: 'decrease' },
+                    { name: 'Pending Transfers', stat: '3', change: '0', changeType: 'neutral' },
+                    { name: 'Active Warehouses', stat: '4', change: '+1', changeType: 'increase' },
+                ].map((item) => (
+                    <div key={item.name} className="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6 border border-gray-100">
+                        <dt>
+                            <div className="absolute rounded-md bg-indigo-500 p-3">
+                                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                                </svg>
+                            </div>
+                            <p className="ml-16 truncate text-sm font-medium text-gray-500">{item.name}</p>
+                        </dt>
+                        <dd className="ml-16 flex items-baseline pb-1 sm:pb-7">
+                            <p className="text-2xl font-semibold text-gray-900">{item.stat}</p>
+                            <p className={`ml-2 flex items-baseline text-sm font-semibold ${item.changeType === 'increase' ? 'text-green-600' : item.changeType === 'decrease' ? 'text-red-600' : 'text-gray-500'}`}>
+                                {item.change}
+                            </p>
+                        </dd>
+                    </div>
+                ))}
+            </div>
+
             <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {/* Product List */}
-                <div className="overflow-hidden bg-white shadow sm:rounded-md">
-                    <div className="px-4 py-5 sm:px-6">
+                <div className="overflow-hidden bg-white shadow sm:rounded-md border border-gray-100">
+                    <div className="px-4 py-5 sm:px-6 bg-gray-50/50">
                         <h3 className="text-base font-semibold leading-6 text-gray-900">Products</h3>
                     </div>
                     <ul role="list" className="divide-y divide-gray-100">
@@ -71,8 +101,8 @@ export default function InventoryDashboard() {
                 </div>
 
                 {/* Stock Moves History */}
-                <div className="overflow-hidden bg-white shadow sm:rounded-md">
-                    <div className="px-4 py-5 sm:px-6">
+                <div className="overflow-hidden bg-white shadow sm:rounded-md border border-gray-100">
+                    <div className="px-4 py-5 sm:px-6 bg-gray-50/50">
                         <h3 className="text-base font-semibold leading-6 text-gray-900">Recent Moves</h3>
                     </div>
                     <ul role="list" className="divide-y divide-gray-100">

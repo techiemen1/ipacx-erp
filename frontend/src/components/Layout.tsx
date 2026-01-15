@@ -8,6 +8,8 @@ import {
     ArchiveBoxIcon,
     UserIcon,
     BuildingOfficeIcon,
+    MagnifyingGlassIcon,
+    BellIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Outlet, Link, useLocation } from 'react-router-dom'
@@ -30,7 +32,7 @@ export default function Layout() {
 
     return (
         <>
-            <div>
+            <div className="bg-gray-50 min-h-screen">
                 <Transition.Root show={sidebarOpen} as={Fragment}>
                     <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
                         <Transition.Child
@@ -42,7 +44,7 @@ export default function Layout() {
                             leaveFrom="opacity-100"
                             leaveTo="opacity-0"
                         >
-                            <div className="fixed inset-0 bg-gray-900/80" />
+                            <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm" />
                         </Transition.Child>
 
                         <div className="fixed inset-0 flex">
@@ -73,9 +75,9 @@ export default function Layout() {
                                         </div>
                                     </Transition.Child>
 
-                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
-                                        <div className="flex h-16 shrink-0 items-center">
-                                            <span className="text-white font-bold text-xl tracking-wider">IPACX ERP</span>
+                                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-slate-900 px-6 pb-4 ring-1 ring-white/10">
+                                        <div className="flex h-16 shrink-0 items-center border-b border-white/5">
+                                            <span className="text-white font-bold text-xl tracking-wider bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">IPACX ERP</span>
                                         </div>
                                         <nav className="flex flex-1 flex-col">
                                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -87,9 +89,9 @@ export default function Layout() {
                                                                     to={item.href}
                                                                     className={classNames(
                                                                         location.pathname === item.href
-                                                                            ? 'bg-gray-800 text-white'
-                                                                            : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
+                                                                            : 'text-slate-400 hover:text-white hover:bg-slate-800 transition-colors',
+                                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-medium'
                                                                     )}
                                                                 >
                                                                     <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
@@ -98,6 +100,12 @@ export default function Layout() {
                                                             </li>
                                                         ))}
                                                     </ul>
+                                                </li>
+                                                <li className="mt-auto">
+                                                    <a href="#" className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-slate-400 hover:bg-slate-800 hover:text-white transition-colors">
+                                                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-[0.625rem] font-medium text-slate-400 group-hover:text-white">S</span>
+                                                        Settings
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </nav>
@@ -110,9 +118,9 @@ export default function Layout() {
 
                 {/* Static sidebar for desktop */}
                 <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
-                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
-                        <div className="flex h-16 shrink-0 items-center">
-                            <span className="text-white font-bold text-xl tracking-wider">IPACX ERP</span>
+                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-slate-900 px-6 pb-4 shadow-xl ring-1 ring-white/5">
+                        <div className="flex h-16 shrink-0 items-center border-b border-white/5">
+                            <span className="text-white font-bold text-xl tracking-wider bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">IPACX ERP</span>
                         </div>
                         <nav className="flex flex-1 flex-col">
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -124,12 +132,15 @@ export default function Layout() {
                                                     to={item.href}
                                                     className={classNames(
                                                         location.pathname === item.href
-                                                            ? 'bg-gray-800 text-white'
-                                                            : 'text-gray-400 hover:text-white hover:bg-gray-800',
-                                                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                                            ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50'
+                                                            : 'text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-200',
+                                                        'group flex gap-x-3 rounded-md p-2.5 text-sm leading-6 font-medium'
                                                     )}
                                                 >
-                                                    <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+                                                    <item.icon className={classNames(
+                                                        location.pathname === item.href ? 'text-white' : 'text-slate-500 group-hover:text-white',
+                                                        "h-5 w-5 shrink-0 transition-colors"
+                                                    )} aria-hidden="true" />
                                                     {item.name}
                                                 </Link>
                                             </li>
@@ -138,11 +149,14 @@ export default function Layout() {
                                 </li>
                             </ul>
                         </nav>
+                        <div className="text-xs text-slate-600 text-center pb-2">
+                            v1.0.2 Premium
+                        </div>
                     </div>
                 </div>
 
-                <div className="lg:pl-72">
-                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+                <div className="lg:pl-72 transition-all duration-300">
+                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white/80 backdrop-blur-md px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
                         <button
                             type="button"
                             className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
@@ -152,32 +166,48 @@ export default function Layout() {
                             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                         </button>
 
-                        {/* Separator */}
-                        <div className="h-6 w-px bg-gray-900/10 lg:hidden" aria-hidden="true" />
-
                         <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                            {/* Header Content */}
-                            <div className="flex flex-1 items-center gap-x-3">
-                                <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
-                                    <BuildingOfficeIcon className="mr-1 h-3 w-3" />
-                                    {user?.tenantId}
-                                </span>
-                            </div>
-
+                            <form className="relative flex flex-1" action="#" method="GET">
+                                <label htmlFor="search-field" className="sr-only">
+                                    Search
+                                </label>
+                                <MagnifyingGlassIcon
+                                    className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
+                                    aria-hidden="true"
+                                />
+                                <input
+                                    id="search-field"
+                                    className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm bg-transparent"
+                                    placeholder="Search resources..."
+                                    type="search"
+                                    name="search"
+                                />
+                            </form>
                             <div className="flex items-center gap-x-4 lg:gap-x-6">
-                                {/* Separator */}
-                                <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true" />
+                                <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
+                                    <span className="sr-only">View notifications</span>
+                                    <BellIcon className="h-6 w-6" aria-hidden="true" />
+                                </button>
+
+                                <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true" />
+
+                                <div className="flex items-center gap-x-3">
+                                    <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+                                        <BuildingOfficeIcon className="mr-1 h-3 w-3" />
+                                        {user?.tenantId}
+                                    </span>
+                                </div>
 
                                 {/* Profile dropdown */}
                                 <Menu as="div" className="relative">
                                     <Menu.Button className="-m-1.5 flex items-center p-1.5">
                                         <span className="sr-only">Open user menu</span>
-                                        <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
-                                            <UserIcon className="h-5 w-5 text-gray-500" />
+                                        <div className="h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold ring-2 ring-white">
+                                            {user?.username?.charAt(0).toUpperCase()}
                                         </div>
                                         <span className="hidden lg:flex lg:items-center">
                                             <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
-                                                {user?.username || 'User'}
+                                                {user?.username}
                                             </span>
                                             <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
                                         </span>
