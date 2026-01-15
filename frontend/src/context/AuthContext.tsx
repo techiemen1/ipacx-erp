@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
     username: string;
@@ -8,6 +8,7 @@ interface User {
 
 interface AuthContextType {
     user: User | null;
+    isLoading: boolean;
     login: (username: string, tenantId: string, token: string) => void;
     logout: () => void;
 }
@@ -15,25 +16,40 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>(() => {
-        const storedUser = localStorage.getItem('ipacx_user');
-        return storedUser ? JSON.parse(storedUser) : null;
-    });
+    const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const initAuth = async () => {
+            try {
+                const storedUser = localStorage.getItem('ipacx_user');
+                if (storedUser) {
+                    setUser(JSON.parse(storedUser));
+                }
+            } catch (e) {
+                console.error("Failed to parse user", e);
+                localStorage.removeItem('ipacx_user');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        initAuth();
+    }, []);
 
     const login = (username: string, tenantId: string, token: string) => {
         const newUser = { username, tenantId, token };
         setUser(newUser);
         localStorage.setItem('ipacx_user', JSON.stringify(newUser));
-        // Force refresh axios headers or similar if needed in future
     };
 
     const logout = () => {
         setUser(null);
         localStorage.removeItem('ipacx_user');
+        window.location.href = '/login'; // Force redirect
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, isLoading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

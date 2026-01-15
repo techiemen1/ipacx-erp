@@ -1,13 +1,17 @@
 import { Fragment, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
     Bars3Icon,
     HomeIcon,
     XMarkIcon,
     CalculatorIcon,
     ArchiveBoxIcon,
+    UserIcon,
+    BuildingOfficeIcon,
 } from '@heroicons/react/24/outline'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { Outlet, Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const navigation = [
     { name: 'Dashboard', href: '/', icon: HomeIcon },
@@ -22,6 +26,7 @@ function classNames(...classes: string[]) {
 export default function Layout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const location = useLocation()
+    const { user, logout } = useAuth()
 
     return (
         <>
@@ -67,10 +72,10 @@ export default function Layout() {
                                             </button>
                                         </div>
                                     </Transition.Child>
-                                    {/* Sidebar component, swap this element with another sidebar if you like */}
+
                                     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4 ring-1 ring-white/10">
                                         <div className="flex h-16 shrink-0 items-center">
-                                            <span className="text-white font-bold text-xl">IPACX ERP</span>
+                                            <span className="text-white font-bold text-xl tracking-wider">IPACX ERP</span>
                                         </div>
                                         <nav className="flex flex-1 flex-col">
                                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -107,7 +112,7 @@ export default function Layout() {
                 <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
                     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
                         <div className="flex h-16 shrink-0 items-center">
-                            <span className="text-white font-bold text-xl">IPACX ERP</span>
+                            <span className="text-white font-bold text-xl tracking-wider">IPACX ERP</span>
                         </div>
                         <nav className="flex flex-1 flex-col">
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -151,10 +156,58 @@ export default function Layout() {
                         <div className="h-6 w-px bg-gray-900/10 lg:hidden" aria-hidden="true" />
 
                         <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-                            <div className="flex flex-1"></div>
+                            {/* Header Content */}
+                            <div className="flex flex-1 items-center gap-x-3">
+                                <span className="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+                                    <BuildingOfficeIcon className="mr-1 h-3 w-3" />
+                                    {user?.tenantId}
+                                </span>
+                            </div>
+
                             <div className="flex items-center gap-x-4 lg:gap-x-6">
-                                {/* User Menu placeholder */}
-                                <span className="text-sm font-semibold leading-6 text-gray-900">Admin User</span>
+                                {/* Separator */}
+                                <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" aria-hidden="true" />
+
+                                {/* Profile dropdown */}
+                                <Menu as="div" className="relative">
+                                    <Menu.Button className="-m-1.5 flex items-center p-1.5">
+                                        <span className="sr-only">Open user menu</span>
+                                        <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                            <UserIcon className="h-5 w-5 text-gray-500" />
+                                        </div>
+                                        <span className="hidden lg:flex lg:items-center">
+                                            <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
+                                                {user?.username || 'User'}
+                                            </span>
+                                            <ChevronDownIcon className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                        </span>
+                                    </Menu.Button>
+                                    <Transition
+                                        as={Fragment}
+                                        enter="transition ease-out duration-100"
+                                        enterFrom="transform opacity-0 scale-95"
+                                        enterTo="transform opacity-100 scale-100"
+                                        leave="transition ease-in duration-75"
+                                        leaveFrom="transform opacity-100 scale-100"
+                                        leaveTo="transform opacity-0 scale-95"
+                                    >
+                                        <Menu.Items className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <button
+                                                        onClick={logout}
+                                                        className={classNames(
+                                                            active ? 'bg-gray-50' : '',
+                                                            'block w-full px-3 py-1 text-left text-sm leading-6 text-gray-900'
+                                                        )}
+                                                    >
+                                                        Sign out
+                                                    </button>
+                                                )}
+                                            </Menu.Item>
+                                        </Menu.Items>
+                                    </Transition>
+                                </Menu>
                             </div>
                         </div>
                     </div>
